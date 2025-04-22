@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipos de Variáveis e Operadores</title>
+    <script>
+        function mostrarTiposEOperacoes() {
+            // Declarando variáveis de diferentes tipos
+            var numero = 25;              // Number
+            var texto = "50";             // String (nota: o número 50 como string)
+            var booleano = false;         // Boolean
+            var indefinido;               // Undefined
+            var nulo = null;              // Null
+            var objeto = { nome: "Maria", idade: 25 };  // Object
+            var lista = [10, 20, 30];     // Array
+
+            // Usando typeof para exibir os tipos das variáveis
+            document.getElementById("pnumero").innerText = "Tipo da variável 'numero': " + typeof numero;
+            document.getElementById("pstring").innerText = "Tipo da variável 'texto': " + typeof texto;
+            document.getElementById("pbooleano").innerText = "Tipo da variável 'booleano': " + typeof booleano;
+            document.getElementById("pundefined").innerText = "Tipo da variável 'indefinido': " + typeof indefinido;
+            document.getElementById("pnull").innerText = "Tipo da variável 'nulo': " + typeof nulo;
+            document.getElementById("pobjeto").innerText = "Tipo da variável 'objeto': " + typeof objeto;
+            document.getElementById("parray").innerText = "Tipo da variável 'lista': " + typeof lista;
+
+            // Operações entre tipos diferentes e mostrando no console
+            console.log("Operação 1 (String + Number):", texto + numero);  // String + Number (Concatenando)
+            console.log("Operação 2 (Boolean && Number):", booleano && numero);  // Boolean AND Number
+            console.log("Operação 3 (Object + Array):", objeto + lista);  // Object + Array
+            console.log("Operação 4 (String * Number):", texto * numero);  // String * Number
+            console.log("Operação 5 (Null + Number):", nulo + numero);  // Null + Number (Null é convertido para 0)
+
+            // Exibindo os resultados na página
+            document.getElementById("resultado1").innerText = "Operação 1 (String + Number): " + (texto + numero) + " (Concatenando String e Number).";
+            document.getElementById("resultado2").innerText = "Operação 2 (Boolean && Number): " + (booleano && numero) + " (Booleano é convertido para 0 ou 1).";
+            document.getElementById("resultado3").innerText = "Operação 3 (Object + Array): " + (objeto + lista) + " (Objeto convertido para String e somado ao Array).";
+            document.getElementById("resultado4").innerText = "Operação 4 (String * Number): " + (texto * numero) + " (String é convertida para número, se possível).";
+            document.getElementById("resultado5").innerText = "Operação 5 (Null + Number): " + (nulo + numero) + " (Null é convertido para 0, somando com o número).";
+        }
+    </script>
+</head>
+<body>
+    <h1>Tipos de Variáveis e Operadores</h1>
+    
+    <!-- Botão para executar o script -->
+    <button onclick="mostrarTiposEOperacoes()">Executar Operações</button>
+    
+    <!-- Exibição dos tipos das variáveis -->
+    <p id="pnumero"></p>
+    <p id="pstring"></p>
+    <p id="pbooleano"></p>
+    <p id="pundefined"></p>
+    <p id="pnull"></p>
+    <p id="pobjeto"></p>
+    <p id="parray"></p>
+    
+    <!-- Exibição dos resultados das operações -->
+    <p id="resultado1"></p>
+    <p id="resultado2"></p>
+    <p id="resultado3"></p>
+    <p id="resultado4"></p>
+    <p id="resultado5"></p>
+
+</body>
+</html>

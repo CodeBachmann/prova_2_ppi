@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O que é JavaScript?</title>
+    <script>
+        // Função para exibir a hora atual no parágrafo com id "current-time"
+        function exibirHora() {
+            const data = new Date();
+            const horaAtual = data.toLocaleTimeString();
+            document.getElementById("current-time").innerHTML = "Hora atual: " + horaAtual;
+        }
+
+        // Exibe uma saudação ao carregar a página
+        window.onload = function() {
+            alert("Bem-vindo ao tutorial sobre JavaScript!");
+            console.log("Página carregada!");
+            exibirHora();
+        };
+    </script>
+</head>
+<body>
+    <h1 id="main-title">O que é JavaScript?</h1>
+    
+    <p id="intro-text">
+        JavaScript é uma linguagem de programação essencial para o desenvolvimento web. Criado por Brendan Eich em 1995, o JavaScript foi inicialmente projetado para adicionar interatividade às páginas web, permitindo que elementos como formulários, animações e interações com o usuário fossem dinâmicos. Ao longo dos anos, seu papel se expandiu, tornando-se indispensável tanto para a criação de aplicações no lado do cliente (navegador) quanto para o lado do servidor.
+    </p>
+
+    <p id="browser-vs-server">
+        No navegador, o JavaScript permite manipular diretamente o conteúdo da página, como adicionar ou remover elementos HTML, alterar estilos e responder a interações do usuário em tempo real. Já no servidor, com tecnologias como Node.js, o JavaScript pode ser utilizado para criar servidores web, manipular bancos de dados e realizar operações que não envolvem diretamente a interface do usuário. A principal diferença entre essas duas execuções é a interação com a interface: enquanto no navegador, o foco é a experiência do usuário, no servidor o foco é o processamento de dados.
+    </p>
+
+    <p id="sandbox-concept">
+        O conceito de "sandbox" refere-se a um ambiente restrito no qual o código JavaScript é executado dentro do navegador. Esse isolamento impede que o código tenha acesso direto a recursos do sistema operacional ou de outros sites, oferecendo uma camada extra de segurança. Dessa forma, mesmo que um script malicioso seja executado, ele não pode comprometer o sistema ou acessar informações sensíveis do usuário, tornando a navegação mais segura.
+    </p>
+
+    <p id="global-objects">
+        No JavaScript, existem vários objetos globais que são fundamentais para a interação com a página e com o navegador. O objeto <b>document</b> é responsável por representar a estrutura HTML da página, permitindo que você acesse e modifique os elementos da interface. O <b>console</b> é usado para registrar mensagens e informações no console do navegador, o que é muito útil para depuração e testes. Já o <b>alert</b> é uma função simples que exibe uma caixa de diálogo ao usuário, frequentemente utilizada para fornecer informações rápidas ou alertar sobre algo importante.
+    </p>
+
+    <p id="current-time"></p> <!-- Aqui a hora atual será exibida -->
+
+</body>
+</html>
