@@ -1,61 +1,146 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-BR">
 <head>
-  <meta charset='utf-8'>
-  <script type="text/javascript" src="custom-text-editor.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Bloco de Notas</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      resize: vertical;
+      font-size: 16px;
+    }
+
+    button {
+      margin: 5px 2px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .nota {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      background: #fafafa;
+      cursor: pointer;
+    }
+
+    .nota:hover {
+      background-color: #f0f0f0;
+    }
+
+    .nota-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nota-texto {
+      white-space: pre-wrap;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+  </style>
 </head>
-
 <body>
-  <div id="container" >
-    <fieldset>
-      <button class="fontStyle italic" onclick="document.execCommand('italic',false,null);" title="Italicize Highlighted Text"></button>
-      <button class="fontStyle bold" onclick="document.execCommand( 'bold',false,null);" title="Bold Highlighted Text"></button>
-      <button class="fontStyle underline" onclick="document.execCommand( 'underline',false,null);"></button>
-      <select id="input-font" class="input"  onchange="changeFont (this);">
-        <option value="Arial">Arial</option>
-        <option value="Helvetica">Helvetica</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Sans serif">Sans serif</option>
-        <option value="Courier New">Courier New</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Georgia">Georgia</option>
-        <option value="Palatino">Palatino</option>
-        <option value="Garamond">Garamond</option>
-        <option value="Comic Sans MS">Comic Sans MS</option>
-        <option value="Arial Black">Arial Black</option>
-        <option value="Tahoma">Tahoma</option>
-        <option value="Comic Sans MS">Comic Sans MS</option>
-      </select>
-      <button class="fontStyle strikethrough" onclick="document.execCommand( 'strikethrough',false,null);"><strikethrough></strikethrough></button>
-      <button class="fontStyle align-left" onclick="document.execCommand( 'justifyLeft',false,null);"><justifyLeft></justifyLeft></button>
-      <button class="fontStyle align-center" onclick="document.execCommand( 'justifyCenter',false,null);"><justifyCenter></justifyCenter></button>
-      <button class="fontStyle align-right" onclick="document.execCommand( 'justifyRight',false,null);"><justifyRight></justifyRight></button>
-      <button class="fontStyle redo-apply" onclick="document.execCommand( 'redo',false,null);"><redo></redo></button>
-      <button class="fontStyle undo-apply" onclick="document.execCommand( 'undo',false,null);"><undo></undo></button>
-      <button class="fontStyle orderedlist" onclick="document.execCommand('insertOrderedList', false, null);"><insertOrderedList></insertOrderedList></button>
-      <button class="fontStyle unorderedlist" onclick="document.execCommand('insertUnorderedList',false, null)"><insertUnorderedList></insertUnorderedList></button>    
-      <input class="color-apply" type="color" onchange="chooseColor()" id="myColor"> 
+  <div class="container">
+    <h2>📝 Bloco de Notas</h2>
+    <textarea id="novaNota" placeholder="Digite sua nota aqui..."></textarea>
+    <br>
+    <button onclick="salvarNota()">Salvar</button>
+    <button onclick="cancelarEdicao()">Cancelar</button>
+    <hr>
+    <div id="listaNotas"></div>
+  </div>
 
-      <!-- font size start -->
-      <select id="fontSize" onclick="changeSize()">
-        <option value="1">1</option>      
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-      </select>
-      <!-- font size end -->
-      
-  </fieldset>
+  <script>
+    let notas = [];
+    let indiceEditando = null;
 
-  <div id="editor1" contenteditable="true" data-text="Enter comment...."></div>
-  
-</div>
-<script src="script.js"></script>
+    function carregarNotas() {
+      const dados = localStorage.getItem('notas');
+      notas = dados ? JSON.parse(dados) : [];
+      mostrarNotas();
+    }
+
+    function salvarNota() {
+      const texto = document.getElementById('novaNota').value.trim();
+      if (!texto) return;
+
+      if (indiceEditando !== null) {
+        notas[indiceEditando].texto = texto;
+        indiceEditando = null;
+      } else {
+        notas.push({ texto });
+      }
+
+      localStorage.setItem('notas', JSON.stringify(notas));
+      document.getElementById('novaNota').value = '';
+      mostrarNotas();
+    }
+
+    function mostrarNotas() {
+      const lista = document.getElementById('listaNotas');
+      lista.innerHTML = '';
+
+      notas.forEach((nota, index) => {
+        const div = document.createElement('div');
+        div.className = 'nota';
+        div.innerHTML = `
+          <div class="nota-header">
+            <strong>Nota ${index + 1}</strong>
+            <div>
+              <button onclick="editarNota(${index})">Editar</button>
+              <button onclick="excluirNota(${index})">Excluir</button>
+            </div>
+          </div>
+          <div class="nota-texto">${nota.texto}</div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    function editarNota(index) {
+      document.getElementById('novaNota').value = notas[index].texto;
+      indiceEditando = index;
+    }
+
+    function excluirNota(index) {
+      const confirmar = confirm("Tem certeza que deseja excluir esta nota?");
+      if (confirmar) {
+        notas.splice(index, 1);
+        localStorage.setItem('notas', JSON.stringify(notas));
+        mostrarNotas();
+      }
+    }
+
+    function cancelarEdicao() {
+      indiceEditando = null;
+      document.getElementById('novaNota').value = '';
+    }
+
+    // Inicializar
+    carregarNotas();
+  </script>
 </body>
 </html>

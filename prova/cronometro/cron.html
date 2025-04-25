@@ -1,20 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cronômetro JavaScript</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Cronômetro com Pausas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+    }
+
+    .cronometro {
+      background: #fff;
+      padding: 20px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    #tempo {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    ul {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    ul li {
+      font-size: 14px;
+    }
+
+    .atalhos {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<h1>Cronômetro JavaScript</h1>
-<div id="cronometro">00:00:00</div>
-<div class="botoes">
-<button id="botaoIniciarParar" onclick="iniciarParar()">Iniciar</button>
-<button id="botaoResetar" onclick="resetar()">Resetar</button>
-</div>
-</div>
-<script src="script.js"></script>
+  <div class="cronometro">
+    <div id="tempo">00:00:00</div>
+    <button onclick="iniciar()">Iniciar</button>
+    <button onclick="pausar()">Pausar</button>
+    <button onclick="parar()">Parar</button>
+
+    <ul id="pausas"></ul>
+
+    <div class="atalhos">
+      Atalhos: [I]niciar, [P]ausar, [S]top (Parar)
+    </div>
+  </div>
+
+  <script>
+    let inicio = null;
+    let tempoTotalPausado = 0;
+    let intervalo = null;
+    let pausado = false;
+    let horaPausa = null;
+
+    function formatar(ms) {
+      let totalSegundos = Math.floor(ms / 1000);
+      let horas = String(Math.floor(totalSegundos / 3600)).padStart(2, '0');
+      let minutos = String(Math.floor((totalSegundos % 3600) / 60)).padStart(2, '0');
+      let segundos = String(totalSegundos % 60).padStart(2, '0');
+      return `${horas}:${minutos}:${segundos}`;
+    }
+
+    function atualizar() {
+      if (!inicio) return;
+      const agora = new Date();
+      const tempoDecorrido = agora - inicio - tempoTotalPausado;
+      document.getElementById('tempo').innerText = formatar(tempoDecorrido);
+    }
+
+    function iniciar() {
+      if (!inicio) {
+        inicio = new Date();
+      }
+
+      if (pausado && horaPausa) {
+        const agora = new Date();
+        tempoTotalPausado += agora - horaPausa;
+        horaPausa = null;
+      }
+
+      pausado = false;
+      clearInterval(intervalo);
+      intervalo = setInterval(atualizar, 500);
+    }
+
+    function pausar() {
+      if (!inicio || pausado) return;
+
+      clearInterval(intervalo);
+      horaPausa = new Date();
+      pausado = true;
+
+      // Registrar pausa
+      const lista = document.getElementById('pausas');
+      const tempoAtual = document.getElementById('tempo').innerText;
+      const item = document.createElement('li');
+      item.innerText = `Pausa em ${tempoAtual}`;
+      lista.appendChild(item);
+    }
+
+    function parar() {
+    clearInterval(intervalo);
+    atualizar(); // Atualiza uma última vez
+
+    // Resetar cronômetro
+    inicio = null;
+    tempoTotalPausado = 0;
+    horaPausa = null;
+    pausado = false;
+
+    // Zerar a interface
+    document.getElementById('tempo').innerText = '00:00:00';
+    document.getElementById('pausas').innerHTML = ''; // Limpa a lista de pausas
+    }
+
+
+    // Atalhos de teclado
+    document.addEventListener('keydown', (e) => {
+      const tecla = e.key.toLowerCase();
+      if (tecla === 'i') iniciar();
+      if (tecla === 'p') pausar();
+      if (tecla === 's') parar();
+    });
+  </script>
 </body>
 </html>

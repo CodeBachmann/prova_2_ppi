@@ -1,162 +1,106 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f2f2f2;
-            margin: 0;
-        }
-        .calculator {
-            width: 300px;
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .display {
-            width: 100%;
-            height: 50px;
-            text-align: right;
-            font-size: 1.5rem;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: none;
-            background-color: #ffeb3b;
-            border-radius: 8px;
-            color: #333;
-        }
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        .button {
-            background-color: #03a9f4;
-            border: none;
-            font-size: 1.5rem;
-            padding: 20px;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: background-color 0.3s, transform 0.2s;
-            color: white;
-        }
-        .button:hover {
-            background-color: #0288d1;
-            transform: scale(1.1);
-        }
-        .button:active {
-            transform: scale(0.95);
-        }
-        .button.clear {
-            background-color: #ff5722;
-        }
-        .button.clear:hover {
-            background-color: #e64a19;
-        }
-        .button.equal {
-            background-color: #8bc34a;
-        }
-        .button.equal:hover {
-            background-color: #689f38;
-        }
-        .button.operator {
-            background-color: #ff9800;
-        }
-        .button.operator:hover {
-            background-color: #f57c00;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Calculadora Simples</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .calculadora {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    width: 250px;
+    }
+
+    #resultado {
+    width: 100%;
+    height: 40px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: right;
+    padding-right: 10px;
+    box-sizing: border-box;
+    }
+
+    .botoes {
+    display: flex;
+    flex-wrap: wrap;
+    }
+
+    .botoes button {
+    width: 25%;
+    height: 50px;
+    font-size: 20px;
+    margin: 2px 0;
+    box-sizing: border-box;
+    }
+
+    .botoes button:last-child {
+    width: 100%; /* Botão "C" ocupa toda a linha */
+    }
+
+  </style>
 </head>
 <body>
-    <div class="calculator">
-        <input type="text" id="display" class="display" disabled>
-        <div class="buttons">
-            <button class="button clear" onclick="clearDisplay()">C</button>
-            <button class="button operator" onclick="appendOperation('/')">/</button>
-            <button class="button operator" onclick="appendOperation('*')">*</button>
-            <button class="button operator" onclick="appendOperation('-')">-</button>
+  <div class="calculadora">
+    <input type="text" id="resultado" disabled>
+    <div class="botoes">
+        <button onclick="adicionar('7')">7</button>
+        <button onclick="adicionar('8')">8</button>
+        <button onclick="adicionar('9')">9</button>
+        <button onclick="adicionar('/')">/</button>
+      
+        <button onclick="adicionar('4')">4</button>
+        <button onclick="adicionar('5')">5</button>
+        <button onclick="adicionar('6')">6</button>
+        <button onclick="adicionar('*')">*</button>
+      
+        <button onclick="adicionar('1')">1</button>
+        <button onclick="adicionar('2')">2</button>
+        <button onclick="adicionar('3')">3</button>
+        <button onclick="adicionar('-')">-</button>
+      
+        <button onclick="adicionar('0')">0</button>
+        <button onclick="adicionar('.')">.</button>
+        <button onclick="calcular()">=</button>
+        <button onclick="adicionar('+')">+</button>
+      
+        <button onclick="limpar()">C</button>
+      </div>      
+  </div>
 
-            <button class="button" onclick="appendNumber('7')">7</button>
-            <button class="button" onclick="appendNumber('8')">8</button>
-            <button class="button" onclick="appendNumber('9')">9</button>
-            <button class="button operator" onclick="appendOperation('+')">+</button>
+  <script>
+    function adicionar(valor) {
+      const resultado = document.getElementById('resultado');
+      resultado.value += valor;
+    }
 
-            <button class="button" onclick="appendNumber('4')">4</button>
-            <button class="button" onclick="appendNumber('5')">5</button>
-            <button class="button" onclick="appendNumber('6')">6</button>
-            <button class="button equal" onclick="calculate()">=</button>
+    function limpar() {
+      document.getElementById('resultado').value = '';
+    }
 
-            <button class="button" onclick="appendNumber('1')">1</button>
-            <button class="button" onclick="appendNumber('2')">2</button>
-            <button class="button" onclick="appendNumber('3')">3</button>
-            <button class="button" onclick="appendNumber('0')">0</button>
-        </div>
-    </div>
-
-    <script>
-        let currentInput = '';
-        let currentOperation = '';
-        let previousInput = '';
-
-        function appendNumber(number) {
-            currentInput += number;
-            document.getElementById('display').value = `${previousInput} ${currentOperation} ${currentInput}`;
+    function calcular() {
+      const resultado = document.getElementById('resultado');
+      try {
+        const expressao = resultado.value;
+        if (/[^0-9+\-*/.]/.test(expressao)) {
+          alert('Expressão inválida!');
+          return;
         }
-
-        function appendOperation(operation) {
-            if (currentInput === '') return;
-            if (previousInput !== '') {
-                calculate(); // Calculate the previous operation before appending a new one
-            }
-            currentOperation = operation;
-            previousInput = currentInput;
-            currentInput = '';
-            document.getElementById('display').value = `${previousInput} ${currentOperation}`;
-        }
-
-        function calculate() {
-            if (previousInput === '' || currentInput === '') return;
-            let result;
-            let prev = parseFloat(previousInput);
-            let current = parseFloat(currentInput);
-
-            switch (currentOperation) {
-                case '+':
-                    result = prev + current;
-                    break;
-                case '-':
-                    result = prev - current;
-                    break;
-                case '*':
-                    result = prev * current;
-                    break;
-                case '/':
-                    if (current === 0) {
-                        alert("Cannot divide by zero");
-                        return;
-                    }
-                    result = prev / current;
-                    break;
-                default:
-                    return;
-            }
-
-            currentInput = result.toString();
-            currentOperation = '';
-            previousInput = '';
-            document.getElementById('display').value = currentInput;
-        }
-
-        function clearDisplay() {
-            currentInput = '';
-            previousInput = '';
-            currentOperation = '';
-            document.getElementById('display').value = '';
-        }
-    </script>
+        resultado.value = eval(expressao);
+      } catch (e) {
+        alert('Erro na expressão!');
+        resultado.value = '';
+      }
+    }
+  </script>
 </body>
 </html>
