@@ -75,7 +75,7 @@
   <div id="resultado" class="resultado"></div>
 
   <script>
-    const API_KEY = "4a3b711b"; // Chave gratuita da OMDB
+    const API_KEY = "f86d8b2"; // Chave gratuita da OMDB
 
     function buscarFilmes() {
       const termo = document.getElementById("busca").value.trim();
@@ -87,7 +87,7 @@
         return;
       }
 
-      fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(termo)}`)
+      fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(termo)}`) // encodeURIComponent troca os caracteres para o formato q a web entende
         .then(res => res.json())
         .then(data => {
           if (data.Response === "True") {
